@@ -34,7 +34,8 @@ public class CakeView extends SurfaceView {
     public static final float outerFlameRadius = 30.0f;
     public static final float innerFlameRadius = 15.0f;
 
-
+    //making private CakeView variable
+    private CakeModel cakeModel;
 
     /**
      * ctor must be overridden here as per standard Java inheritance practice.  We need it
@@ -62,6 +63,14 @@ public class CakeView extends SurfaceView {
 
         setBackgroundColor(Color.WHITE);  //better than black default
 
+        //initalize with a new cake model object
+        cakeModel = new CakeModel();
+
+    }
+
+    //returns reference to CakeModel object
+    public CakeModel getCakeModel(){
+        return cakeModel;
     }
 
     /**
@@ -71,14 +80,16 @@ public class CakeView extends SurfaceView {
     public void drawCandle(Canvas canvas, float left, float bottom) {
         canvas.drawRect(left, bottom - candleHeight, left + candleWidth, bottom, candlePaint);
 
-        //draw the outer flame for flame 1
-        float flameCenterX = left + candleWidth/2;
-        float flameCenterY = bottom - wickHeight - candleHeight - outerFlameRadius/3;
-        canvas.drawCircle(flameCenterX, flameCenterY, outerFlameRadius, outerFlamePaint);
+        if (cakeModel.litOrNah) {
+            //draw the outer flame for flame 1
+            float flameCenterX = left + candleWidth / 2;
+            float flameCenterY = bottom - wickHeight - candleHeight - outerFlameRadius / 3;
+            canvas.drawCircle(flameCenterX, flameCenterY, outerFlameRadius, outerFlamePaint);
 
-        //draw the inner flame
-        flameCenterY += outerFlameRadius/3;
-        canvas.drawCircle(flameCenterX, flameCenterY, innerFlameRadius, innerFlamePaint);
+            //draw the inner flame
+            flameCenterY += outerFlameRadius / 3;
+            canvas.drawCircle(flameCenterX, flameCenterY, innerFlameRadius, innerFlamePaint);
+        }
 
         //draw the wick
         float wickLeft = left + candleWidth/2 - wickWidth/2;
