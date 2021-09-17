@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.Switch;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,11 +22,17 @@ public class MainActivity extends AppCompatActivity {
         //creates new CakeController object
         CakeController cakeController = new CakeController(cakeView);
 
-        //1 find button
+        //1 find buttons, switches, seeKBar, and textView
         Button blowOutButton = (Button) findViewById(R.id.blowOutButton);
+        Switch candleSwitch = (Switch) findViewById(R.id.candlesSwitch);
+        Switch frostSwtich = (Switch) findViewById(R.id.frostingSwitch);
+        SeekBar numCandlesSeekBar = (SeekBar) findViewById(R.id.seekBar);
 
         //2 set the listener for the EVENT to be handled
-        blowOutButton.setOnClickListener((View.OnClickListener) cakeView);
+        blowOutButton.setOnClickListener(cakeController);
+        candleSwitch.setOnCheckedChangeListener(cakeController);
+        frostSwtich.setOnCheckedChangeListener(cakeController);
+        numCandlesSeekBar.setOnSeekBarChangeListener(cakeController);
     }
 
     public void goodbye(View button){
