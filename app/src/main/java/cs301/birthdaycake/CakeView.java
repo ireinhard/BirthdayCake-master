@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 
-public class CakeView extends SurfaceView implements View.OnTouchListener {
+public class CakeView extends SurfaceView implements View.OnTouchListener{
 
     /* These are the paints we'll use to draw the birthday cake below */
     Paint cakePaint = new Paint();
@@ -19,6 +19,7 @@ public class CakeView extends SurfaceView implements View.OnTouchListener {
     Paint innerFlamePaint = new Paint();
     Paint wickPaint = new Paint();
     Paint bluePaint = new Paint();
+    Paint greenPaint = new Paint();
 
     /* These constants define the dimensions of the cake.  While defining constants for things
         like this is good practice, we could be calculating these better by detecting
@@ -36,12 +37,20 @@ public class CakeView extends SurfaceView implements View.OnTouchListener {
     public static final float wickWidth = 6.0f;
     public static final float outerFlameRadius = 30.0f;
     public static final float innerFlameRadius = 15.0f;
+    public static final float patternWidth = 25.0f;
+    public static final float patternHeight = 20.0f;
 
     public static final float balloonW = 100;
     public static final float balloonH = 200;
 
     //making private CakeView variable
     private CakeModel cakeModel;
+    private float patternX;
+    private float patternY;
+    private boolean drawText;
+    private static final Paint redPaint = new Paint();
+    private float x;
+    private float y;
 
     /**
      * ctor must be overridden here as per standard Java inheritance practice.  We need it
@@ -73,7 +82,14 @@ public class CakeView extends SurfaceView implements View.OnTouchListener {
 
         //initalize with a new cake model object
         cakeModel = new CakeModel();
+        drawText = false;
+        redPaint.setColor(Color.RED);
+        greenPaint.setColor(Color.GREEN);
+        x = 0;
+        y = 0;
 
+        patternX= -1;
+        patternY= -1;
     }
 
     //returns reference to CakeModel object
@@ -104,6 +120,11 @@ public class CakeView extends SurfaceView implements View.OnTouchListener {
         float wickTop = bottom - wickHeight - candleHeight;
         canvas.drawRect(wickLeft, wickTop, wickLeft + wickWidth, wickTop + wickHeight, wickPaint);
 
+        //Draw text
+        if (drawText){
+            redPaint.setTextSize(40);
+            canvas.drawText(x + ", " + y, 1400, 400, redPaint);
+        }
     }
 
     /**
@@ -170,19 +191,32 @@ public class CakeView extends SurfaceView implements View.OnTouchListener {
                 drawCandle(canvas, cakeLeft + ((i+1)*cakeWidth)/(cakeModel.numCandle+1) - candleWidth/2, cakeTop);
             }
         }
+
+        //draw pattern
+        if (patternX >= 0 && patternY >= 0){
+            //TOP LEFT
+            canvas.drawRect(patternX-patternWidth, patternY - patternHeight, patternX, patternY, greenPaint);
+            //TOP RIGHT
+            canvas.drawRect(patternX, patternY - patternHeight, patternX+patternWidth, patternY, redPaint);
+            //BOTTOM LEFT
+            canvas.drawRect(patternX-patternWidth, patternY, patternX, patternY + patternHeight, redPaint);
+            //BOTTOM RIGHT
+            canvas.drawRect(patternX, patternY, patternX+patternWidth, patternY + patternHeight, greenPaint);
+        }
     }//onDraw
 
     @Override
-    public boolean onTouch(View view, MotionEvent event) {
-        if (event.getActionMasked() == MotionEvent.ACTION_DOWN){
+    public boolean onTouch(View v, MotionEvent event) {
+        if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
+            patternX = event.getX();
+            patternY = event.getY();
             x = event.getX();
             y = event.getY();
             cakeModel.xPosBalloon = event.getX();
             cakeModel.yPosBalloon = event.getY();
             drawText = true;
-
-            invalidate();
             cakeModel.beenClicked = true;
+            invalidate();
             return true;
         }
 
