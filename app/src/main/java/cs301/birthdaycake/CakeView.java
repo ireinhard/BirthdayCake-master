@@ -115,6 +115,11 @@ public class CakeView extends SurfaceView implements View.OnTouchListener{
         float wickTop = bottom - wickHeight - candleHeight;
         canvas.drawRect(wickLeft, wickTop, wickLeft + wickWidth, wickTop + wickHeight, wickPaint);
 
+        //Draw text
+        if (drawText){
+            redPaint.setTextSize(40);
+            canvas.drawText(x + ", " + y, 1400, 400, redPaint);
+        }
     }
 
     /**
@@ -191,12 +196,16 @@ public class CakeView extends SurfaceView implements View.OnTouchListener{
         if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
             patternX = event.getX();
             patternY = event.getY();
-            v.invalidate();
             x = event.getX();
             y = event.getY();
+            cakeModel.xPosBalloon = motionEvent.getX();
+            cakeModel.yPosBalloon = motionEvent.getY();
             drawText = true;
+            cakeModel.beenClicked = true;
+            invalidate();
             return true;
         }
+
         return false;
     }
 }//class CakeView
