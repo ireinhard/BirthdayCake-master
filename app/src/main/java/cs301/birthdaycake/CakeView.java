@@ -5,9 +5,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
+import android.view.View;
 
-public class CakeView extends SurfaceView {
+public class CakeView extends SurfaceView implements View.OnTouchListener{
 
     /* These are the paints we'll use to draw the birthday cake below */
     Paint cakePaint = new Paint();
@@ -16,6 +18,8 @@ public class CakeView extends SurfaceView {
     Paint outerFlamePaint = new Paint();
     Paint innerFlamePaint = new Paint();
     Paint wickPaint = new Paint();
+    Paint patternRed = new Paint();
+    Paint patternGreen = new Paint();
 
     /* These constants define the dimensions of the cake.  While defining constants for things
         like this is good practice, we could be calculating these better by detecting
@@ -33,9 +37,13 @@ public class CakeView extends SurfaceView {
     public static final float wickWidth = 6.0f;
     public static final float outerFlameRadius = 30.0f;
     public static final float innerFlameRadius = 15.0f;
+    public static final float patternWidth = 25.0f;
+    public static final float patternHeight = 20.0f;
 
     //making private CakeView variable
     private CakeModel cakeModel;
+    private float patternX;
+    private float patternY;
 
     /**
      * ctor must be overridden here as per standard Java inheritance practice.  We need it
@@ -61,12 +69,17 @@ public class CakeView extends SurfaceView {
         innerFlamePaint.setStyle(Paint.Style.FILL);
         wickPaint.setColor(Color.BLACK);
         wickPaint.setStyle(Paint.Style.FILL);
+        patternRed.setColor(0xFFFF0000);
+        patternRed.setStyle(Paint.Style.FILL);
+        patternGreen.setColor(0xFF00FF00);
+        patternGreen.setStyle(Paint.Style.FILL);
 
         setBackgroundColor(Color.WHITE);  //better than black default
 
-        //initalize with a new cake model object
+        //initialize private variables
         cakeModel = new CakeModel();
-
+        patternX= -1;
+        patternY= -1;
     }
 
     //returns reference to CakeModel object
@@ -154,7 +167,29 @@ public class CakeView extends SurfaceView {
                 drawCandle(canvas, cakeLeft + ((i+1)*cakeWidth)/(cakeModel.numCandle+1) - candleWidth/2, cakeTop);
             }
         }
+
+        //draw pattern
+        if (patternX >= 0 && patternY >= 0){
+            //TOP LEFT
+            canvas.drawRect(patternX-patternWidth, patternY - patternHeight, patternX, patternY, patternGreen);
+            //TOP RIGHT
+            canvas.drawRect(patternX, patternY - patternHeight, patternX+patternWidth, patternY, patternRed);
+            //BOTTOM LEFT
+            canvas.drawRect(patternX-patternWidth, patternY, patternX, patternY + patternHeight, patternRed);
+            //BOTTOM RIGHT
+            canvas.drawRect(patternX, patternY, patternX+patternWidth, patternY + patternHeight, patternGreen);
+        }
     }//onDraw
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
+            patternX = event.getX();
+            patternY = event.getY();
+            v.invalidate();
+            return true;
+        }
+        return false;
+    }
 }//class CakeView
 
