@@ -198,8 +198,8 @@ public class CakeView extends SurfaceView implements View.OnTouchListener{
             patternY = event.getY();
             x = event.getX();
             y = event.getY();
-            cakeModel.xPosBalloon = motionEvent.getX();
-            cakeModel.yPosBalloon = motionEvent.getY();
+            cakeModel.xPosBalloon = event.getX();
+            cakeModel.yPosBalloon = event.getY();
             drawText = true;
             cakeModel.beenClicked = true;
             invalidate();
