@@ -5,9 +5,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
+import android.view.View;
 
-public class CakeView extends SurfaceView {
+public class CakeView extends SurfaceView implements View.OnClickListener, View.OnTouchListener {
 
     /* These are the paints we'll use to draw the birthday cake below */
     Paint cakePaint = new Paint();
@@ -36,6 +38,10 @@ public class CakeView extends SurfaceView {
 
     //making private CakeView variable
     private CakeModel cakeModel;
+    private boolean drawText;
+    private static final Paint redPaint = new Paint();
+    private float x;
+    private float y;
 
     /**
      * ctor must be overridden here as per standard Java inheritance practice.  We need it
@@ -66,6 +72,10 @@ public class CakeView extends SurfaceView {
 
         //initalize with a new cake model object
         cakeModel = new CakeModel();
+        drawText = false;
+        redPaint.setColor(Color.RED);
+        x = 0;
+        y = 0;
 
     }
 
@@ -97,6 +107,11 @@ public class CakeView extends SurfaceView {
         float wickTop = bottom - wickHeight - candleHeight;
         canvas.drawRect(wickLeft, wickTop, wickLeft + wickWidth, wickTop + wickHeight, wickPaint);
 
+        //Draw text
+        if (drawText){
+            redPaint.setTextSize(40);
+            canvas.drawText(x + ", " + y, 1400, 400, redPaint);
+        }
     }
 
     /**
@@ -156,5 +171,23 @@ public class CakeView extends SurfaceView {
         }
     }//onDraw
 
+    @Override
+    public void onClick(View view) {
+
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent event) {
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN){
+            x = event.getX();
+            y = event.getY();
+            drawText = true;
+
+            invalidate();
+            return true;
+        }
+
+        return false;
+    }
 }//class CakeView
 
