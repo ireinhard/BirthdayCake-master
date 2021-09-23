@@ -18,8 +18,7 @@ public class CakeView extends SurfaceView implements View.OnTouchListener{
     Paint outerFlamePaint = new Paint();
     Paint innerFlamePaint = new Paint();
     Paint wickPaint = new Paint();
-    Paint patternRed = new Paint();
-    Paint patternGreen = new Paint();
+    Paint greenPaint = new Paint();
 
     /* These constants define the dimensions of the cake.  While defining constants for things
         like this is good practice, we could be calculating these better by detecting
@@ -44,6 +43,10 @@ public class CakeView extends SurfaceView implements View.OnTouchListener{
     private CakeModel cakeModel;
     private float patternX;
     private float patternY;
+    private boolean drawText;
+    private static final Paint redPaint = new Paint();
+    private float x;
+    private float y;
 
     /**
      * ctor must be overridden here as per standard Java inheritance practice.  We need it
@@ -69,15 +72,17 @@ public class CakeView extends SurfaceView implements View.OnTouchListener{
         innerFlamePaint.setStyle(Paint.Style.FILL);
         wickPaint.setColor(Color.BLACK);
         wickPaint.setStyle(Paint.Style.FILL);
-        patternRed.setColor(0xFFFF0000);
-        patternRed.setStyle(Paint.Style.FILL);
-        patternGreen.setColor(0xFF00FF00);
-        patternGreen.setStyle(Paint.Style.FILL);
 
         setBackgroundColor(Color.WHITE);  //better than black default
 
-        //initialize private variables
+        //initalize with a new cake model object
         cakeModel = new CakeModel();
+        drawText = false;
+        redPaint.setColor(Color.RED);
+        greenPaint.setColor(Color.GREEN);
+        x = 0;
+        y = 0;
+
         patternX= -1;
         patternY= -1;
     }
@@ -171,13 +176,13 @@ public class CakeView extends SurfaceView implements View.OnTouchListener{
         //draw pattern
         if (patternX >= 0 && patternY >= 0){
             //TOP LEFT
-            canvas.drawRect(patternX-patternWidth, patternY - patternHeight, patternX, patternY, patternGreen);
+            canvas.drawRect(patternX-patternWidth, patternY - patternHeight, patternX, patternY, greenPaint);
             //TOP RIGHT
-            canvas.drawRect(patternX, patternY - patternHeight, patternX+patternWidth, patternY, patternRed);
+            canvas.drawRect(patternX, patternY - patternHeight, patternX+patternWidth, patternY, redPaint);
             //BOTTOM LEFT
-            canvas.drawRect(patternX-patternWidth, patternY, patternX, patternY + patternHeight, patternRed);
+            canvas.drawRect(patternX-patternWidth, patternY, patternX, patternY + patternHeight, redPaint);
             //BOTTOM RIGHT
-            canvas.drawRect(patternX, patternY, patternX+patternWidth, patternY + patternHeight, patternGreen);
+            canvas.drawRect(patternX, patternY, patternX+patternWidth, patternY + patternHeight, greenPaint);
         }
     }//onDraw
 
@@ -187,6 +192,9 @@ public class CakeView extends SurfaceView implements View.OnTouchListener{
             patternX = event.getX();
             patternY = event.getY();
             v.invalidate();
+            x = event.getX();
+            y = event.getY();
+            drawText = true;
             return true;
         }
         return false;
