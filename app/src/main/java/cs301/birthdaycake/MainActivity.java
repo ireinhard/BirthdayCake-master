@@ -33,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
         candleSwitch.setOnCheckedChangeListener(cakeController);
         frostSwtich.setOnCheckedChangeListener(cakeController);
         numCandlesSeekBar.setOnSeekBarChangeListener(cakeController);
+
+        //Not too sure about this
+        cakeView.setOnTouchListener(cakeView);
     }
 
     public void goodbye(View button){
