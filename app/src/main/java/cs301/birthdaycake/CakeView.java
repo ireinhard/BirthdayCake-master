@@ -5,7 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
+import android.view.View;
 
 public class CakeView extends SurfaceView implements View.OnTouchListener {
 
@@ -16,6 +18,7 @@ public class CakeView extends SurfaceView implements View.OnTouchListener {
     Paint outerFlamePaint = new Paint();
     Paint innerFlamePaint = new Paint();
     Paint wickPaint = new Paint();
+    Paint bluePaint = new Paint();
 
     /* These constants define the dimensions of the cake.  While defining constants for things
         like this is good practice, we could be calculating these better by detecting
@@ -33,6 +36,9 @@ public class CakeView extends SurfaceView implements View.OnTouchListener {
     public static final float wickWidth = 6.0f;
     public static final float outerFlameRadius = 30.0f;
     public static final float innerFlameRadius = 15.0f;
+
+    public static final float balloonW = 100;
+    public static final float balloonH = 200;
 
     //making private CakeView variable
     private CakeModel cakeModel;
@@ -61,6 +67,7 @@ public class CakeView extends SurfaceView implements View.OnTouchListener {
         innerFlamePaint.setStyle(Paint.Style.FILL);
         wickPaint.setColor(Color.BLACK);
         wickPaint.setStyle(Paint.Style.FILL);
+        bluePaint.setColor(Color.BLUE);
 
         setBackgroundColor(Color.WHITE);  //better than black default
 
@@ -147,6 +154,15 @@ public class CakeView extends SurfaceView implements View.OnTouchListener {
             canvas.drawRect(cakeLeft, top, cakeLeft + cakeWidth, bottom, cakePaint);
         }
 
+        //drawing balloon
+        //drawing
+        if (cakeModel.beenClicked){
+            //draw oval
+            canvas.drawOval(cakeModel.xPosBalloon - (balloonW/2), cakeModel.yPosBalloon - (balloonH/2), cakeModel.xPosBalloon + (balloonW/2), cakeModel.yPosBalloon + (balloonW/2), bluePaint);
+            //draw line
+            canvas.drawLine(cakeModel.xPosBalloon, cakeModel.yPosBalloon + (balloonH/2), cakeModel.xPosBalloon, (cakeModel.yPosBalloon + (balloonH/2) + 100), wickPaint);
+        }
+
         //draw candles if true, otherwise don't
         if (cakeModel.candlesOrNah){
             //have to take into account numCandles from seekBar
@@ -161,8 +177,8 @@ public class CakeView extends SurfaceView implements View.OnTouchListener {
         if (event.getActionMasked() == MotionEvent.ACTION_DOWN){
             x = event.getX();
             y = event.getY();
-            cakeModel.xPosBalloon = motionEvent.getX();
-            cakeModel.yPosBalloon = motionEvent.getY();
+            cakeModel.xPosBalloon = event.getX();
+            cakeModel.yPosBalloon = event.getY();
             drawText = true;
 
             invalidate();
