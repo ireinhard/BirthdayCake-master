@@ -4,11 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.SurfaceView;
-import android.view.View;
 
 public class CakeView extends SurfaceView implements View.OnTouchListener {
 
@@ -19,12 +16,6 @@ public class CakeView extends SurfaceView implements View.OnTouchListener {
     Paint outerFlamePaint = new Paint();
     Paint innerFlamePaint = new Paint();
     Paint wickPaint = new Paint();
-
-    //creating new paint and w/h for balloon
-    Paint bluePaint = new Paint();
-    public static final float balloonWidth = 100;
-    public static final float balloonHeight = 200;
-    public static final float lineHeight = 200;
 
     /* These constants define the dimensions of the cake.  While defining constants for things
         like this is good practice, we could be calculating these better by detecting
@@ -75,9 +66,6 @@ public class CakeView extends SurfaceView implements View.OnTouchListener {
 
         //initalize with a new cake model object
         cakeModel = new CakeModel();
-
-        //setting blue paint
-        bluePaint.setColor(Color.BLUE);
 
     }
 
@@ -160,35 +148,28 @@ public class CakeView extends SurfaceView implements View.OnTouchListener {
         }
 
         //draw candles if true, otherwise don't
-        if (cakeModel.candlesOrNah) {
+        if (cakeModel.candlesOrNah){
             //have to take into account numCandles from seekBar
-            for (int i = 0; i < cakeModel.numCandle; i++) {
-                drawCandle(canvas, cakeLeft + ((i + 1) * cakeWidth) / (cakeModel.numCandle + 1) - candleWidth / 2, cakeTop);
+            for (int i = 0; i < cakeModel.numCandle; i++){
+                drawCandle(canvas, cakeLeft + ((i+1)*cakeWidth)/(cakeModel.numCandle+1) - candleWidth/2, cakeTop);
             }
-        }
-        //only draw balloon if onTouch returns true
-        if (cakeModel.beenClicked) {
-            //drawing balloon oval
-            canvas.drawOval(cakeModel.xPosBalloon-(balloonWidth/2), cakeModel.yPosBalloon-(balloonHeight/2), cakeModel.xPosBalloon+(balloonWidth/2), cakeModel.yPosBalloon+(balloonHeight/2), bluePaint);
-            //draw balloon line
-            canvas.drawLine(cakeModel.xPosBalloon, cakeModel.yPosBalloon+(balloonHeight/2), cakeModel.xPosBalloon, (cakeModel.yPosBalloon+(balloonHeight/2)+lineHeight), wickPaint);
         }
     }//onDraw
 
     @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        if(motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-            //this is reporting the beginning of a touch event, as the user touches down
+    public boolean onTouch(View view, MotionEvent event) {
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN){
+            x = event.getX();
+            y = event.getY();
             cakeModel.xPosBalloon = motionEvent.getX();
             cakeModel.yPosBalloon = motionEvent.getY();
+            drawText = true;
 
-            //invalidate so draws image
-            view.invalidate();
-
-            //indicates event was performed and I am done with it
+            invalidate();
             cakeModel.beenClicked = true;
             return true;
         }
+
         return false;
     }
 }//class CakeView

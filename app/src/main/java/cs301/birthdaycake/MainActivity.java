@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
         frostSwtich.setOnCheckedChangeListener(cakeController);
         numCandlesSeekBar.setOnSeekBarChangeListener(cakeController);
 
-        //Not too sure about this
         cakeView.setOnTouchListener(cakeView);
     }
 
